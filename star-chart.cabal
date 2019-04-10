@@ -24,4 +24,4 @@ executable star-chart
                      , parsec
                      , parsec3-numbers
                      , parallel
-
+  ghc-options: -main-is Stars
