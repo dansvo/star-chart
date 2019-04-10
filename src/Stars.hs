@@ -29,9 +29,10 @@ filterStars xs = vis_list $ (filter (\x -> vmag x < 7.0 && prop x /= "Sol")) (ca
 main :: IO ()
 main = do
     putStrLn "parsing star file"
-    ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile "./src/hygdata_v3.csv"
+    ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile "./HYG-Database/hygdata_v3.csv"
     putStrLn "parsing constellation file"
-    ethConstLines <- parseCLFile <$> readFile "./src/constellationship.fab.empty"
+    -- ethConstLines <- parseCLFile <$> readFile "path/to/constellation/file" -- ./src/constellationship.fab.empty"
+    let ethConstLines = Right []
     sequenceA $ make_svg <$> ethStars <*> ethConstLines    
     return ()
 
