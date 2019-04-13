@@ -17,7 +17,7 @@ onestar = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (c
     # lc blue
 
 test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram  SVG V2 Double Any
-test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue
+test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
     where points = (star_to_point . head) <$> groups
           starfigs = starfig <$> groups
           all_starfigs = atPoints points starfigs
