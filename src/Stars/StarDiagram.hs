@@ -54,12 +54,14 @@ star_to_point s = point_polar (pi/2 - (dec starloc)) (-(ra starloc))
 point_polar :: Double -> Double -> P2 Double
 point_polar r theta = origin & _r +~r & _theta <>~ (theta @@ rad)
 
-render_svg_starchart :: SVGFloat n => QDiagram SVG V2 n Any -> IO ()
-render_svg_starchart = renderSVG "./chart.svg" (mkSizeSpec2D (Just 1800) (Just 1800))
+render_svg_starchart :: SVGFloat n => String -> QDiagram SVG V2 n Any -> IO ()
+render_svg_starchart outPath diagram = do
+    putStrLn $ "rendering to " ++ outPath
+    renderSVG outPath (mkSizeSpec2D (Just 1800) (Just 1800)) diagram
 
-make_svg :: [[Star]] -> [ConstLine] -> IO ()
-make_svg grouped_stars cls = do
+make_svg :: [[Star]] -> [ConstLine] -> String -> IO ()
+make_svg grouped_stars cls outPath = do
         --putStrLn $ show $ (take 10) grouped_stars
         let brightest = (filter (\x-> (dec . lctn . head) x > -1 && total_vmag x < 7.0)) grouped_stars
         let sortedBrightest = sortOn total_vmag brightest
-        render_svg_starchart $ test_diag3 sortedBrightest cls
+        render_svg_starchart outPath $ test_diag3 sortedBrightest cls
