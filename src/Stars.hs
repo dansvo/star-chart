@@ -2,6 +2,7 @@ module Stars where
 
 {-# LANGUAGE FlexibleContexts #-}
 
+import System.Environment (getArgs)
 import Stars.Types
 import Stars.Parser
 import Data.Maybe (catMaybes)
@@ -28,11 +29,11 @@ filterStars xs = vis_list $ (filter (\x -> vmag x < 7.0 && prop x /= "Sol")) (ca
 
 main :: IO ()
 main = do
+    args <- getArgs
     putStrLn "parsing star file"
-    ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile "./HYG-Database/hygdata_v3.csv"
+    ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile ( args !! 0 )
     putStrLn "parsing constellation file"
-    -- ethConstLines <- parseCLFile <$> readFile "path/to/constellation/file" -- ./src/constellationship.fab.empty"
-    let ethConstLines = Right []
+    ethConstLines <- parseCLFile <$> readFile ( args !! 1 )
     sequenceA $ make_svg <$> ethStars <*> ethConstLines    
     return ()
 
