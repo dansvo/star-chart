@@ -34,6 +34,7 @@ main = do
     ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile ( args !! 0 )
     putStrLn "parsing constellation file"
     ethConstLines <- parseCLFile <$> readFile ( args !! 1 )
-    sequenceA $ make_svg <$> ethStars <*> ethConstLines    
+    let outPath = args !! 2
+    sequenceA $ make_svg <$> ethStars <*> pure [] <*> pure outPath-- ethConstLines
     return ()
 
