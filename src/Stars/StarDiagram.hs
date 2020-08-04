@@ -47,8 +47,9 @@ starfig ss = onestar # scale (0.006 * (10-(total_vmag ss)))
 --    # named hip_string
     where hip_string = ((show . get_hipnum) (brightest ss))
 
+type StarChart = QDiagram SVG V2 Double Any
 
-render_svg_starchart :: SVGFloat n => String -> QDiagram SVG V2 n Any -> IO ()
+render_svg_starchart :: String -> StarChart -> IO ()
 render_svg_starchart outPath diagram = do
     putStrLn $ "rendering to " ++ outPath
     renderSVG outPath (mkSizeSpec2D (Just 1800) (Just 1800)) diagram
