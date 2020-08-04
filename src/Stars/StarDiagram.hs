@@ -48,7 +48,7 @@ starfig ss = onestar # scale (0.006 * (10-(total_vmag ss)))
 
 
 star_to_point :: Star -> P2 Double
-star_to_point s = point_polar (pi/2 - (dec starloc)) (-(ra starloc))
+star_to_point s = point_polar (pi/2 - (declination starloc)) (-(rightAscention starloc))
     where starloc = lctn s
 
 point_polar :: Double -> Double -> P2 Double
@@ -62,6 +62,6 @@ render_svg_starchart outPath diagram = do
 make_svg :: [[Star]] -> [ConstLine] -> String -> IO ()
 make_svg grouped_stars cls outPath = do
         --putStrLn $ show $ (take 10) grouped_stars
-        let brightest = (filter (\x-> (dec . lctn . head) x > -1 && total_vmag x < 7.0)) grouped_stars
+        let brightest = (filter (\x-> (declination . lctn . head) x > -1 && total_vmag x < 7.0)) grouped_stars
         let sortedBrightest = sortOn total_vmag brightest
         render_svg_starchart outPath $ test_diag3 sortedBrightest cls

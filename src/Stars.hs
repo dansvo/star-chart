@@ -14,7 +14,7 @@ import Text.Parsec (ParseError)
 -- as a single star to the unaided eye
 
 star_belongs :: Star -> [Star] -> Bool
-star_belongs star stars = any id [angDist (lctn star) (lctn x) < 0.0020 | x <- stars]
+star_belongs star stars = any id [angularDistance (lctn star) (lctn x) < 0.0020 | x <- stars]
 
 vis_list :: [Star] -> [[Star]]
 vis_list stars = foldr f [] stars
