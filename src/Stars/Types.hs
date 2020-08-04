@@ -1,10 +1,22 @@
 module Stars.Types where
 import Data.List (minimumBy)
+import Diagrams.Prelude
+import Diagrams.Backend.SVG
+import Diagrams.TwoD.Text
 
 data Location = Location
     { rightAscention :: Double
     , declination :: Double
     } deriving (Eq, Show)
+
+type Projection = Location -> P2 Double
+
+basic_projection :: Projection
+basic_projection location = point_polar (pi/2 - (declination location)) (-(rightAscention location))
+
+point_polar :: Double -> Double -> P2 Double
+point_polar r theta = origin & _r +~r & _theta <>~ (theta @@ rad)
+
 
 -- angular distance in radians between two points in spherical coordinates
 angularDistance :: Location -> Location -> Double

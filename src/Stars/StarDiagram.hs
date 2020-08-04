@@ -18,14 +18,15 @@ onestar = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (c
 
 test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram  SVG V2 Double Any
 test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
-    where points = (star_to_point . head) <$> groups
+    where points = (basic_projection . lctn . head) <$> groups
           starfigs = starfig <$> groups
           all_starfigs = atPoints points starfigs
           connections = connection <$> cls
 
 connection :: ConstLine -> QDiagram SVG V2 Double Any -> QDiagram SVG V2 Double Any
-connection cl d = connect' (with & arrowHead .~ noHead 
-                                 & shaftStyle %~ lc white . lw veryThin) (pt1 cl) (pt2 cl) d
+connection cl d =
+    connect' (with & arrowHead .~ noHead 
+                   & shaftStyle %~ lc white . lw veryThin) (pt1 cl) (pt2 cl) d
 
 --perim = atPoints (trailVertices $ regPoly 48 0.3) (repeat (square 1))
 perim = atPoints (trailVertices $ regPoly 240 0.07) rot_ticks
@@ -43,16 +44,9 @@ starfig :: [Star] -> QDiagram  SVG V2 Double Any
 --starfig ss = text hip_string # scale 0.05 `atop` onestar # scale (0.012 * (7-(total_vmag ss))) # rotate ((total_vmag ss) @@ rad) # named hip_string
 starfig ss = onestar # scale (0.006 * (10-(total_vmag ss))) 
     # rotate ((total_vmag ss) @@ rad) 
-    # named hip_string
+--    # named hip_string
     where hip_string = ((show . get_hipnum) (brightest ss))
 
-
-star_to_point :: Star -> P2 Double
-star_to_point s = point_polar (pi/2 - (declination starloc)) (-(rightAscention starloc))
-    where starloc = lctn s
-
-point_polar :: Double -> Double -> P2 Double
-point_polar r theta = origin & _r +~r & _theta <>~ (theta @@ rad)
 
 render_svg_starchart :: SVGFloat n => String -> QDiagram SVG V2 n Any -> IO ()
 render_svg_starchart outPath diagram = do
