@@ -35,6 +35,7 @@ main = do
     putStrLn "parsing constellation file"
     ethConstLines <- parseCLFile <$> readFile ( args !! 1 )
     let outPath = args !! 2
+    putStrLn $ "rendering star chart"
     sequenceA $ make_svg <$> ethStars <*> pure [] <*> pure outPath-- ethConstLines
     return ()
 
