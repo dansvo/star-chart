@@ -9,7 +9,6 @@ import Data.Maybe (catMaybes)
 import Stars.StarDiagram
 import Text.Parsec (ParseError)
 
-
 -- functions to deal with the fact that visual binaries appear
 -- as a single star to the unaided eye
 

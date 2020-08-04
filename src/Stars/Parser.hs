@@ -6,9 +6,8 @@ import Text.Parsec.Char (endOfLine)
 import Text.Parsec.Number
 import Control.Monad (ap)
 
-----------------
 -- Star Database Parser
-----------------
+
 starLine :: GenParser Char st (Maybe Star)
 starLine = do
     _        <- cellComma
@@ -57,10 +56,7 @@ starFile = headerLine *> sepEndBy starLine endOfLine <* eof
 parseStarFile :: String -> Either ParseError [Maybe Star]
 parseStarFile = parse starFile "starfile input"
 
-
-----------------
 -- Constellation File Parser
-----------------
 
 hipnumPair :: GenParser Char st ConstLine
 hipnumPair = do

@@ -28,7 +28,6 @@ connection cl d =
     connect' (with & arrowHead .~ noHead 
                    & shaftStyle %~ lc white . lw veryThin) (pt1 cl) (pt2 cl) d
 
---perim = atPoints (trailVertices $ regPoly 48 0.3) (repeat (square 1))
 perim = atPoints (trailVertices $ regPoly 240 0.07) rot_ticks
 
 ticks = cycle [tick, tick, tick, tick, (onestar # scale 0.06 # scaleX 1.6)]
@@ -41,7 +40,6 @@ tick = square 0.07
     # scaleY 0.15
 
 starfig :: [Star] -> QDiagram  SVG V2 Double Any
---starfig ss = text hip_string # scale 0.05 `atop` onestar # scale (0.012 * (7-(total_vmag ss))) # rotate ((total_vmag ss) @@ rad) # named hip_string
 starfig ss = onestar # scale (0.006 * (10-(total_vmag ss))) 
     # rotate ((total_vmag ss) @@ rad) 
 --    # named hip_string
@@ -55,7 +53,6 @@ render_svg_starchart outPath diagram = do
 
 make_svg :: [[Star]] -> [ConstLine] -> String -> IO ()
 make_svg grouped_stars cls outPath = do
-        --putStrLn $ show $ (take 10) grouped_stars
         let brightest = (filter (\x-> (declination . lctn . head) x > -1 && total_vmag x < 7.0)) grouped_stars
         let sortedBrightest = sortOn total_vmag brightest
         render_svg_starchart outPath $ test_diag3 sortedBrightest cls
