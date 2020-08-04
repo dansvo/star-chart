@@ -7,7 +7,7 @@ in
   rec {
     program = pkgs.haskellPackages.callPackage ./default.nix { };
     chart = pkgs.stdenv.mkDerivation {
-      name = "star-chart";
+      name = "star-chart.svg";
       program = program;
       stars = stars;
       lines = lines;
