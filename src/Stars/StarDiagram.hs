@@ -27,8 +27,6 @@ tick = square 0.07
 starfig :: [Star] -> QDiagram SVG V2 Double Any
 starfig ss = starDiagram # scale (0.006 * (10-(total_vmag ss))) 
     # rotate ((total_vmag ss) @@ rad) 
---    # named hip_string
-    where hip_string = ((show . get_hipnum) (brightest ss))
 
 type StarChart = QDiagram SVG V2 Double Any
 

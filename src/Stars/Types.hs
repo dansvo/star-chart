@@ -50,10 +50,6 @@ add_vmags  = lum_to_vmag . sum . (fmap vmag_to_lum)
 total_vmag :: [Star] -> Double
 total_vmag = add_vmags . (fmap vmag)
 
-get_hipnum :: Star -> Int
-get_hipnum (Star (Just x) _ _ _ _ _) = x
-get_hipnum _ = (-1)
-
 brightest :: [Star] -> Star
 brightest = minimumBy (\s1 s2 -> compare (vmag s1) (vmag s2))
 
