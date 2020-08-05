@@ -32,7 +32,7 @@ type Constellation = String
 data Star = Star 
     { hipparcosNumber :: Maybe HipparcosNumber
     , constellation   :: Constellation
-    , bayer  :: String    -- Bayer designatioin
+    , bayer  :: String    -- Bayer designation
     , properName   :: String    -- Proper name, like "Sirius"
     , vmag   :: Double    -- visual magnitude
     , location   :: Location
