@@ -7,19 +7,6 @@ import Diagrams.TwoD.Text
 import Data.Maybe (catMaybes)
 import Data.List (sortOn)
 
-starDiagram :: Diagram B
-starDiagram = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (cycle [0.25,0.5])))
-    # fc white
-    # lw veryThin
-    # lc blue
-
-test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
-test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
-    where points = (basic_projection . Stars.Types.location . head) <$> groups
-          starfigs = starfig <$> groups
-          all_starfigs = atPoints points starfigs
-          connections = connection <$> cls
-
 connection :: ConstLine -> QDiagram SVG V2 Double Any -> QDiagram SVG V2 Double Any
 connection cl d =
     connect' (with & arrowHead .~ noHead 
@@ -43,6 +30,19 @@ starfig ss = starDiagram # scale (0.006 * (10-(total_vmag ss)))
     where hip_string = ((show . get_hipnum) (brightest ss))
 
 type StarChart = QDiagram SVG V2 Double Any
+
+starDiagram :: Diagram B
+starDiagram = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (cycle [0.25,0.5])))
+    # fc white
+    # lw veryThin
+    # lc blue
+
+test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
+test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
+    where points = (basic_projection . Stars.Types.location . head) <$> groups
+          starfigs = starfig <$> groups
+          all_starfigs = atPoints points starfigs
+          connections = connection <$> cls
 
 render_svg_starchart :: String -> StarChart -> IO ()
 render_svg_starchart outPath starChart = do
