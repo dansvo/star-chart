@@ -27,14 +27,15 @@ angularDistance a b = acos $ (cos dec_a) * (cos dec_b) + (sin dec_a) * (sin dec_
         dec_b = declination b
 
 type HipparcosNumber = Int
+type Constellation = String
 
 data Star = Star 
     { hipparcosNumber :: Maybe HipparcosNumber
-    , cltn   :: String    -- Constellation
+    , constellation   :: Constellation
     , bayer  :: String    -- Bayer designatioin
-    , prop   :: String    -- Proper name, like "Sirius"
+    , properName   :: String    -- Proper name, like "Sirius"
     , vmag   :: Double    -- visual magnitude
-    , lctn   :: Location
+    , location   :: Location
     } deriving Show
 
 instance Eq Star where

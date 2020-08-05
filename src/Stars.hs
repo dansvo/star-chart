@@ -13,7 +13,7 @@ import Text.Parsec (ParseError)
 -- as a single star to the unaided eye
 
 star_belongs :: Star -> [Star] -> Bool
-star_belongs star stars = any id [angularDistance (lctn star) (lctn x) < 0.0020 | x <- stars]
+star_belongs star stars = any id [angularDistance (location star) (location x) < 0.0020 | x <- stars]
 
 vis_list :: [Star] -> [[Star]]
 vis_list stars = foldr f [] stars
@@ -24,7 +24,7 @@ vis_list stars = foldr f [] stars
             False -> x:(f star xs)
 
 filterStars :: [Maybe Star] -> [[Star]]
-filterStars xs = vis_list $ (filter (\x -> vmag x < 7.0 && prop x /= "Sol")) (catMaybes xs)
+filterStars xs = vis_list $ (filter (\x -> vmag x < 7.0 && properName x /= "Sol")) (catMaybes xs)
 
 main :: IO ()
 main = do
@@ -34,7 +34,7 @@ main = do
     putStrLn "parsing constellation file"
     ethConstLines <- parseCLFile <$> readFile ( args !! 1 )
     let outPath = args !! 2
-    putStrLn $ "rendering star chart"
+    putStrLn $ "rendering"
     sequenceA $ make_svg <$> ethStars <*> pure [] <*> pure outPath-- ethConstLines
     return ()
 

@@ -7,18 +7,15 @@ import Diagrams.TwoD.Text
 import Data.Maybe (catMaybes)
 import Data.List (sortOn)
 
-printEachElem :: Show a => [a] -> IO ()
-printEachElem xs = traverse (putStrLn . show) xs *> return ()
-
-onestar :: Diagram B
-onestar = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (cycle [0.25,0.5])))
+starDiagram :: Diagram B
+starDiagram = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 10 (cycle [0.25,0.5])))
     # fc white
     # lw veryThin
     # lc blue
 
-test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram  SVG V2 Double Any
+test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
 test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
-    where points = (basic_projection . lctn . head) <$> groups
+    where points = (basic_projection . Stars.Types.location . head) <$> groups
           starfigs = starfig <$> groups
           all_starfigs = atPoints points starfigs
           connections = connection <$> cls
@@ -30,7 +27,7 @@ connection cl d =
 
 perim = atPoints (trailVertices $ regPoly 240 0.07) rot_ticks
 
-ticks = cycle [tick, tick, tick, tick, (onestar # scale 0.06 # scaleX 1.6)]
+ticks = cycle [tick, tick, tick, tick, (starDiagram # scale 0.06 # scaleX 1.6)]
 
 rot_ticks = zipWith (\a b -> a # (rotate ((((b-0.5)/240) @@ turn)))) ticks [0..]
 
@@ -39,8 +36,8 @@ tick = square 0.07
     # fc white
     # scaleY 0.15
 
-starfig :: [Star] -> QDiagram  SVG V2 Double Any
-starfig ss = onestar # scale (0.006 * (10-(total_vmag ss))) 
+starfig :: [Star] -> QDiagram SVG V2 Double Any
+starfig ss = starDiagram # scale (0.006 * (10-(total_vmag ss))) 
     # rotate ((total_vmag ss) @@ rad) 
 --    # named hip_string
     where hip_string = ((show . get_hipnum) (brightest ss))
@@ -48,11 +45,11 @@ starfig ss = onestar # scale (0.006 * (10-(total_vmag ss)))
 type StarChart = QDiagram SVG V2 Double Any
 
 render_svg_starchart :: String -> StarChart -> IO ()
-render_svg_starchart outPath diagram = do
-    renderSVG outPath (mkSizeSpec2D (Just 1800) (Just 1800)) diagram
+render_svg_starchart outPath starChart = do
+    renderSVG outPath (mkSizeSpec2D (Just 1800) (Just 1800)) starChart
 
 make_svg :: [[Star]] -> [ConstLine] -> String -> IO ()
 make_svg grouped_stars cls outPath = do
-        let brightest = (filter (\x-> (declination . lctn . head) x > -1 && total_vmag x < 7.0)) grouped_stars
+        let brightest = (filter (\x-> (declination . Stars.Types.location . head) x > -1 && total_vmag x < 7.0)) grouped_stars
         let sortedBrightest = sortOn total_vmag brightest
         render_svg_starchart outPath $ test_diag3 sortedBrightest cls
