@@ -9,14 +9,6 @@ data Location = Location
     , declination :: Double
     } deriving (Eq, Show)
 
-type Projection = Location -> P2 Double
-
-azimuthalEquidistant :: Projection
-azimuthalEquidistant location = point_polar (pi/2 - (declination location)) (-(rightAscention location))
-
-point_polar :: Double -> Double -> P2 Double
-point_polar r theta = origin & _r +~r & _theta <>~ (theta @@ rad)
-
 -- angular distance in radians between two points in spherical coordinates
 angularDistance :: Location -> Location -> Double
 angularDistance a b = acos $ (cos dec_a) * (cos dec_b) + (sin dec_a) * (sin dec_b) * cos (ra_a - ra_b)
