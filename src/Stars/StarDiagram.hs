@@ -36,8 +36,8 @@ starDiagram = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 1
     # lw veryThin
     # lc blue
 
-test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
-test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
+diagramWithBorder :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
+diagramWithBorder groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
     where points = (azimuthalEquidistant . Stars.Types.location . head) <$> groups
           starfigs = starfig <$> groups
           all_starfigs = atPoints points starfigs
@@ -51,4 +51,4 @@ make_svg :: [[Star]] -> [ConstLine] -> String -> IO ()
 make_svg grouped_stars cls outPath = do
         let brightest = (filter (\x-> (declination . Stars.Types.location . head) x > -1 && total_vmag x < 7.0)) grouped_stars
         let sortedBrightest = sortOn total_vmag brightest
-        render_svg_starchart outPath $ test_diag3 sortedBrightest cls
+        render_svg_starchart outPath $ diagramWithBorder sortedBrightest cls
