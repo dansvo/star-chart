@@ -39,7 +39,7 @@ starDiagram = polygon (with & polyType .~ PolyPolar (repeat (36 @@ deg)) (take 1
 
 test_diag3 :: [[Star]] -> [ConstLine] -> QDiagram SVG V2 Double Any
 test_diag3 groups cls = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
-    where points = (basic_projection . Stars.Types.location . head) <$> groups
+    where points = (azimuthalEquidistant . Stars.Types.location . head) <$> groups
           starfigs = starfig <$> groups
           all_starfigs = atPoints points starfigs
           connections = connection <$> cls

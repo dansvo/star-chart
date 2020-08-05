@@ -11,8 +11,8 @@ data Location = Location
 
 type Projection = Location -> P2 Double
 
-basic_projection :: Projection
-basic_projection location = point_polar (pi/2 - (declination location)) (-(rightAscention location))
+azimuthalEquidistant :: Projection
+azimuthalEquidistant location = point_polar (pi/2 - (declination location)) (-(rightAscention location))
 
 point_polar :: Double -> Double -> P2 Double
 point_polar r theta = origin & _r +~r & _theta <>~ (theta @@ rad)
