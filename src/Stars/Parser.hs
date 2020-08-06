@@ -5,6 +5,7 @@ import Text.ParserCombinators.Parsec
 import Text.Parsec.Char (endOfLine)
 import Text.Parsec.Number
 import Control.Monad (ap)
+import Location
 
 -- Star Database Parser
 

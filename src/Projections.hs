@@ -4,6 +4,7 @@ import Diagrams.Prelude
 import Diagrams.Backend.SVG
 import Diagrams.TwoD.Text
 import Stars.Types
+import Location
 
 type Projection = Location -> P2 Double
 

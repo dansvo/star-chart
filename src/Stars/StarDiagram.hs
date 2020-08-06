@@ -7,6 +7,7 @@ import Diagrams.TwoD.Text
 import Data.Maybe (catMaybes)
 import Data.List (sortOn)
 import Projections
+import Location
 
 connection :: ConstLine -> QDiagram SVG V2 Double Any -> QDiagram SVG V2 Double Any
 connection cl d =

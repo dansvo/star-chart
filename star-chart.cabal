@@ -26,6 +26,7 @@ executable star-chart
                      , parallel
   ghc-options: -main-is Stars
   other-modules:
+    Location,
     Projections,
     Stars.Parser,
     Stars.StarDiagram,
