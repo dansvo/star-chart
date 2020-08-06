@@ -1,5 +1,8 @@
 module Luminous where
 
+class Luminous a where
+    visualMagnitude :: a -> VisualMagnitude
+
 type VisualMagnitude = Double
 
 ----------------

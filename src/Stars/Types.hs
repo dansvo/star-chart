@@ -16,6 +16,9 @@ data Star = Star
     , location   :: Location
     } deriving Show
 
+instance Luminous.Luminous Star where
+    visualMagnitude s = vmag s
+
 instance Eq Star where
     (==) star1 star2 = (hipparcosNumber star1) == (hipparcosNumber star2)
 
