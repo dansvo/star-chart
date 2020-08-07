@@ -26,6 +26,7 @@ executable star-chart
                      , parallel
   ghc-options: -main-is Stars
   other-modules:
+    ApparentStar,
     Location,
     Luminous,
     Projections,
