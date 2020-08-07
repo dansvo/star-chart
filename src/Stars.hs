@@ -9,12 +9,13 @@ import Data.Maybe (catMaybes)
 import Stars.StarDiagram
 import Text.Parsec (ParseError)
 import Location
+import Luminous (brighterThan)
 
 -- functions to deal with the fact that visual binaries appear
 -- as a single star to the unaided eye
 
 star_belongs :: Star -> [Star] -> Bool
-star_belongs star stars = any id [Location.angularDistance (location star) (location x) < 0.0020 | x <- stars]
+star_belongs star stars = any id [Location.angularDistance (Location.location star) (Location.location x) < 0.0020 | x <- stars]
 
 vis_list :: [Star] -> [[Star]]
 vis_list stars = foldr f [] stars
@@ -25,7 +26,7 @@ vis_list stars = foldr f [] stars
             False -> x:(f star xs)
 
 filterStars :: [Maybe Star] -> [[Star]]
-filterStars xs = vis_list $ (filter (\x -> vmag x < 7.0 && properName x /= "Sol")) (catMaybes xs)
+filterStars xs = vis_list $ (filter (\x -> x `brighterThan` 7.5 && properName x /= "Sol")) (catMaybes xs)
 
 main :: IO ()
 main = do

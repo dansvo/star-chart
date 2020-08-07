@@ -19,3 +19,5 @@ lum_to_vmag lum = (-2.5) * (logBase 10 lum)
 add_vmags :: (Functor f, Foldable f, Floating a) => f a -> a
 add_vmags  = lum_to_vmag . sum . (fmap vmag_to_lum)
 
+brighterThan :: Luminous a => a -> VisualMagnitude -> Bool
+brighterThan luminousObject referenceMagnitude = visualMagnitude luminousObject < referenceMagnitude

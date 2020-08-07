@@ -17,3 +17,5 @@ angularDistance a b = acos $ (cos dec_a) * (cos dec_b) + (sin dec_a) * (sin dec_
         dec_a = declination a
         dec_b = declination b
 
+class Located a where
+    location :: a -> Location

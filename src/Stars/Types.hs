@@ -19,6 +19,9 @@ data Star = Star
 instance Luminous.Luminous Star where
     visualMagnitude s = vmag s
 
+instance Location.Located Star where
+    location star = Stars.Types.location star
+
 instance Eq Star where
     (==) star1 star2 = (hipparcosNumber star1) == (hipparcosNumber star2)
 
