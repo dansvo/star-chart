@@ -1,5 +1,5 @@
 { mkDerivation, base, diagrams, diagrams-lib, diagrams-svg
-, parallel, parsec, parsec3-numbers, stdenv
+, parallel, parsec, parsec3-numbers, stdenv, lib
 }:
 mkDerivation {
   pname = "star-chart";
@@ -12,5 +12,5 @@ mkDerivation {
     parsec3-numbers
   ];
   homepage = "https://github.com/githubuser/star-chart#readme";
-  license = stdenv.lib.licenses.bsd3;
+  license = lib.licenses.bsd3;
 }
