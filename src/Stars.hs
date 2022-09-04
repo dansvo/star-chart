@@ -20,7 +20,7 @@ import Data.Astro.Types
 -- as a single star to the unaided eye
 
 star_belongs :: (Location.Located a, Location.Located b) => a -> b -> Bool
-star_belongs star apparentStar = Location.angularDistance (Location.location star) (Location.location apparentStar) < 0.0020
+star_belongs star apparentStar = Location.angularDistance (Location.location star) (Location.location apparentStar) < 0.0001
 
 vis_list :: [Star] -> [ApparentStar]
 vis_list stars = foldr f [] stars
