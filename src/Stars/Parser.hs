@@ -2,10 +2,11 @@ module Stars.Parser where
 
 import Stars.Types
 import Text.ParserCombinators.Parsec
-import Text.Parsec.Char (endOfLine)
+import Text.Parsec.Char (endOfLine, char)
 import Text.Parsec.Number
 import Control.Monad (ap)
 import Location
+import Data.Astro.Coordinate
 
 -- Star Database Parser
 
@@ -25,10 +26,10 @@ starLine = do
     cstltn   <- cellComma
     _        <- count 6 cellComma *> cell
     let mbe_hip = parseInt hip :: Maybe Int
-        mbe_ra = fmap (\x -> x * pi / 12) $ parseDouble ra_str :: Maybe Double
-        mbe_dec = fmap (\x -> x * pi / 180) $ parseDouble dec_str :: Maybe Double
+        mbe_dec = fmap (\x -> Data.Astro.Coordinate.DD x) $ parseDouble dec_str :: Maybe DecimalDegrees
+        mbe_ra = fmap (\x -> Data.Astro.Coordinate.DH x) $ parseDouble ra_str :: Maybe DecimalHours
         mbe_vmag = parseDouble vmag_str :: Maybe Double
-    return $ Star mbe_hip cstltn bayer proper <$> mbe_vmag <*> (Location <$> mbe_ra <*> mbe_dec)
+    return $ Star mbe_hip cstltn bayer proper <$> mbe_vmag <*> (Data.Astro.Coordinate.EC1 <$> mbe_dec <*> mbe_ra)
 
 cellComma :: GenParser Char st String
 cellComma = cell <* commaP
@@ -61,19 +62,28 @@ parseStarFile = parse starFile "starfile input"
 
 hipnumPair :: GenParser Char st ConstLine
 hipnumPair = do
-    num1 <- many1 digit
-    many1 (char ' ')
-    num2 <- many1 digit
+    num1 <- int
+    tab
+    num2 <- int
     return $ ConstLine num1 num2
 
 constLine :: GenParser Char st [ConstLine]
 constLine = do
-    constName <- many1 alphaNum
-    many1 (char ' ')
+    many comment
+    constName <- many1 (alphaNum <|> char '.')
+    tab
     line_count <- many1 digit
-    hps <- many (many1 (char ' ') *> hipnumPair)
-    many (char ' ')
-    return hps
+    tab
+    pairs <- sepEndBy hipnumPair tab
+    pure pairs
+
+comment :: GenParser Char st ()
+comment = do
+    Text.Parsec.Char.char '#'
+    manyTill anyChar newline
+    many newline
+    pure ()
+    
 
 clFile :: GenParser Char st [ConstLine]
 clFile = concat <$> sepEndBy constLine endOfLine <* eof

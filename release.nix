@@ -13,7 +13,10 @@ in
       lines = lines;
       buildCommand = ''
         declare -xp
-        $program/bin/star-chart $stars $lines $out
+        $program/bin/star-chart \
+            --star_file $stars \
+            --constellation_file $lines \
+            --out_path $out
       '';
     };
   }

@@ -3,6 +3,7 @@ module Stars.Types where
 import Data.List (minimumBy)
 import Location
 import Luminous
+import Data.Astro.Coordinate
 
 type HipparcosNumber = Int
 type Constellation = String
@@ -13,7 +14,7 @@ data Star = Star
     , bayer  :: String    -- Bayer designation
     , properName   :: String    -- Proper name, like "Sirius"
     , vmag   :: VisualMagnitude
-    , location   :: Location
+    , location :: EquatorialCoordinates1
     } deriving Show
 
 instance Luminous.Luminous Star where
@@ -26,8 +27,8 @@ instance Eq Star where
     (==) star1 star2 = (hipparcosNumber star1) == (hipparcosNumber star2)
 
 data ConstLine = ConstLine
-    { pt1 :: String
-    , pt2 :: String
+    { pt1 :: HipparcosNumber
+    , pt2 :: HipparcosNumber
     } deriving Show
 
 brightest :: [Star] -> Star
