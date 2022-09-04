@@ -13,6 +13,8 @@ import Luminous (brighterThan)
 import ApparentStar
 import Data.List.NonEmpty hiding ((!!))
 import Options.Applicative
+import Data.Astro.Time.JulianDate
+import Data.Astro.Types
 
 -- functions to deal with the fact that visual binaries appear
 -- as a single star to the unaided eye
@@ -55,11 +57,16 @@ main :: IO ()
 main = do
     options <- execParser parser_info
     putStrLn "parsing star file"
-    ethStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile ( star_file options )
+    ethMAllStars <- parseStarFile <$> readFile ( star_file options )
+    let ethAllStars = catMaybes <$> ethMAllStars
+    ethApparentStars <- (fmap.fmap) filterStars $ parseStarFile <$> readFile ( star_file options )
     putStrLn "parsing constellation file"
     ethConstLines <- parseCLFile <$> readFile ( constellation_file options )
-    let outPath = out_path options
-    putStrLn $ "rendering"
-    sequenceA $ make_svg <$> ethStars <*> pure [] <*> pure outPath -- ethConstLines
-    return ()
+    case ethConstLines of
+        (Left e) -> error $ show e
+        (Right constLines) -> do
+            let outPath = out_path options
+            putStrLn $ "rendering"
+            sequenceA $ make_svg <$> ethAllStars <*> ethApparentStars <*> pure constLines <*> pure (GeoC 42 0) <*> pure (JD 0) <*> pure outPath -- ethConstLines
+            return ()
 

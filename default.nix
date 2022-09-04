@@ -1,5 +1,5 @@
 { mkDerivation, base, diagrams, diagrams-lib, diagrams-svg
-, parallel, parsec, parsec3-numbers, stdenv, lib
+, parallel, parsec, parsec3-numbers, astro, stdenv, lib
 }:
 mkDerivation {
   pname = "star-chart";
@@ -9,7 +9,7 @@ mkDerivation {
   isExecutable = true;
   executableHaskellDepends = [
     base diagrams diagrams-lib diagrams-svg parallel parsec
-    parsec3-numbers
+    parsec3-numbers astro
   ];
   homepage = "https://github.com/githubuser/star-chart#readme";
   license = lib.licenses.bsd3;
