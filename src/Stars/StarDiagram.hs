@@ -27,17 +27,17 @@ holeyStar innerDiameter outerDiameter spokeCount = polygon ( with & polyType .~ 
 mag0 = holeyStar 1.00 2.0 8
 mag1 = holeyStar 1.00 2.0 6
 mag2 = holeyStar 1.00 2.0 5
-mag3 = holeyStar 0.0001 1.0 6
-mag4 = holeyStar 0.0001 1.0 5
+mag3 = holeyStar 0.0001 1.2 6
+mag4 = holeyStar 0.0001 0.4 5
 mag5 = square 0.005 # lwG 0.45 # lc white # fc white # lineCap LineCapRound
 
 starfig :: ApparentStar -> QDiagram SVG V2 Double Any
 starfig apparentStar 
-    | Luminous.visualMagnitude apparentStar < 1 = mag0 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
-    | Luminous.visualMagnitude apparentStar < 2 = mag1 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
-    | Luminous.visualMagnitude apparentStar < 3 = mag2 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
-    | Luminous.visualMagnitude apparentStar < 4 = mag3 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
-    | Luminous.visualMagnitude apparentStar < 5 = mag4 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
+    | Luminous.visualMagnitude apparentStar < 1.0 = mag0 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
+    | Luminous.visualMagnitude apparentStar < 2.0 = mag1 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
+    | Luminous.visualMagnitude apparentStar < 3.0 = mag2 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
+    | Luminous.visualMagnitude apparentStar < 4.0 = mag3 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
+    | Luminous.visualMagnitude apparentStar < 5.0 = mag4 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
     | otherwise                                 = mag5 # rotate ((Luminous.visualMagnitude apparentStar) @@ rad)
 
 type StarChart = QDiagram SVG V2 Double Any
@@ -65,13 +65,13 @@ pointPair stars constLine = (\x y -> (x, y)) <$> maybeEndpoint1 <*> maybeEndpoin
 
 diagramWithBorder :: [Star] -> [ApparentStar] -> [ConstLine] -> GeographicCoordinates -> JulianDate -> QDiagram SVG V2 Double Any
 --diagramWithBorder allStars apparentStars cls geoCoords date = foldr ($) all_starfigs connections `beneath` all_starfigs `atop` perim `atop` square 5.48 # fc blue # lw none
-diagramWithBorder allStars apparentStars cls geoCoords date = (foldr (atop) all_starfigs connections) `beneath` all_starfigs `atop` square 305.0 # fc blue # lw none
+diagramWithBorder allStars apparentStars cls geoCoords date = (foldr (atop) mempty connections) `beneath` all_starfigs `atop` square 305.0 # fc blue # lw none
     where positioner = objectPosition geoCoords date azimuthalEquidistant
           points = (positioner . Location.location) <$> apparentStars
           starfigs = starfig <$> apparentStars
           all_starfigs = atPoints points starfigs
           line_endpoints = catMaybes $ (pointPair allStars) <$> cls
-          filtered_endpoints = (filter (\(p1, p2) -> isAboveHorizon geoCoords date p1 && isAboveHorizon geoCoords date p2)) line_endpoints
+          filtered_endpoints = (filter (\(p1, p2) -> isAboveHorizon geoCoords date p1 || isAboveHorizon geoCoords date p2)) line_endpoints
           positioned_endpoints = (\(p1, p2) -> (objectPosition geoCoords date azimuthalEquidistant p1, objectPosition geoCoords date azimuthalEquidistant p2)) <$> filtered_endpoints
           connections = (\(p1, p2) -> strokeLine ( fromVertices [p1, p2]) # moveTo p1 # lc gold # lwG 0.6) <$> positioned_endpoints
 
