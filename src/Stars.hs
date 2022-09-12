@@ -20,7 +20,7 @@ import Data.Astro.Types
 -- as a single star to the unaided eye
 
 star_belongs :: (Location.Located a, Location.Located b) => a -> b -> Bool
-star_belongs star apparentStar = Location.angularDistance (Location.location star) (Location.location apparentStar) < 0.0020
+star_belongs star apparentStar = Location.angularDistance (Location.location star) (Location.location apparentStar) < 0.0010
 
 vis_list :: [Star] -> [ApparentStar]
 vis_list stars = foldr f [] stars
@@ -31,7 +31,7 @@ vis_list stars = foldr f [] stars
             False -> x:(f star xs)
 
 filterStars :: [Maybe Star] -> [ApparentStar]
-filterStars xs = vis_list $ (Prelude.filter (\x -> x `brighterThan` 7.5 && properName x /= "Sol")) (catMaybes xs)
+filterStars xs = vis_list $ (Prelude.filter (\x -> x `brighterThan` 6.5 && properName x /= "Sol")) (catMaybes xs)
 
 data CommandLineOptions = CommandLineOptions
     { star_file :: String
@@ -67,6 +67,6 @@ main = do
         (Right constLines) -> do
             let outPath = out_path options
             putStrLn $ "rendering"
-            sequenceA $ make_svg <$> ethAllStars <*> ethApparentStars <*> pure constLines <*> pure (GeoC 42 0) <*> pure (JD 0) <*> pure outPath -- ethConstLines
+            sequenceA $ make_svg <$> ethAllStars <*> ethApparentStars <*> pure constLines <*> pure (GeoC 42 210) <*> pure (JD 0) <*> pure outPath -- ethConstLines
             return ()
 
